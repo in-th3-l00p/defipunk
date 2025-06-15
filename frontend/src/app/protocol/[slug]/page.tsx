@@ -7,6 +7,7 @@ import Image from 'next/image'
 import { ChevronLeft, ExternalLink, Github, Globe, Twitter } from 'lucide-react'
 import { defiLlama, Protocol } from '../../../services/defiLlama'
 import { DeFiPunkProtocol, transformProtocolToDefipunk, ProtocolStatus, getDeFiScanUrl } from '../../../utils/defipunkScore'
+import SubgraphData from '../../../components/SubgraphData'
 
 const statuses: Record<ProtocolStatus, string> = {
   'High Score': 'text-green-700 bg-green-50 ring-green-600/20',
@@ -331,6 +332,11 @@ export default function ProtocolPage() {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Real-time Subgraph Data */}
+        <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6 mb-8">
+          <SubgraphData protocolSlug={rawProtocol.slug} />
         </div>
 
         {/* Footer */}
