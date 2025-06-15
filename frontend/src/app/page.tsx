@@ -112,8 +112,147 @@ export default function Home() {
           </div>
         </div>
 
+        {/* Information Sections */}
+        <div className="mb-12 grid gap-8 md:grid-cols-2">
+          {/* DeFiScan Section */}
+          <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
+            <div className="flex items-center mb-4">
+              <div className="flex-shrink-0">
+                <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+                  <span className="text-white font-bold text-lg">🛡️</span>
+                </div>
+              </div>
+              <div className="ml-4">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                  What is DeFiScan?
+                </h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  Decentralization analysis framework
+                </p>
+              </div>
+            </div>
+            <div className="space-y-3 text-sm text-gray-600 dark:text-gray-300">
+              <p>
+                <strong>DeFiScan</strong> is a comprehensive framework that formalizes the decentralization stages of DeFi protocols, 
+                enabling verifiable assessment of maturity and risks in DeFi technology.
+              </p>
+              <div className="space-y-2">
+                <p><strong>Stage 0 - Full Training Wheels:</strong> Centralized control with basic transparency</p>
+                <p><strong>Stage 1 - Limited Training Wheels:</strong> Reduced centralization risks with security councils</p>
+                <p><strong>Stage 2 - No Training Wheels:</strong> Fully autonomous with minimal centralization risks</p>
+              </div>
+              <p>
+                DeFiScan analyzes five key dimensions: <strong>Chain</strong> (underlying blockchain), 
+                <strong>Upgradeability</strong> (permission risks), <strong>Autonomy</strong> (external dependencies), 
+                <strong>Exit Window</strong> (user protection), and <strong>Accessibility</strong> (interface availability).
+              </p>
+              <div className="mt-4">
+                <a
+                  href="https://www.defiscan.info"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-medium"
+                >
+                  Visit DeFiScan.info →
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {/* The Graph Section */}
+          <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
+            <div className="flex items-center mb-4">
+              <div className="flex-shrink-0">
+                <div className="w-10 h-10 bg-purple-600 rounded-lg flex items-center justify-center">
+                  <span className="text-white font-bold text-lg">📊</span>
+                </div>
+              </div>
+              <div className="ml-4">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                  What is The Graph?
+                </h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  Decentralized blockchain data indexing
+                </p>
+              </div>
+            </div>
+            <div className="space-y-3 text-sm text-gray-600 dark:text-gray-300">
+              <p>
+                <strong>The Graph</strong> is a decentralized protocol for indexing and querying blockchain data across 90+ networks, 
+                making blockchain data easily accessible for developers without complex infrastructure.
+              </p>
+              <div className="space-y-2">
+                <p><strong>Subgraphs:</strong> Open APIs to query blockchain data created by anyone</p>
+                <p><strong>Substreams:</strong> High-performance real-time data streams</p>
+                <p><strong>Token API:</strong> Instant access to standardized token data</p>
+              </div>
+              <p>
+                The Graph solves the challenge of querying blockchain data by providing a globally distributed network 
+                of indexers who process smart contract events and serve organized data through GraphQL APIs.
+              </p>
+              <div className="mt-4 space-y-1">
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  • 1.27+ trillion queries served • 75K+ projects • 99.99%+ uptime
+                </p>
+                <a
+                  href="https://thegraph.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center text-purple-600 hover:text-purple-800 dark:text-purple-400 dark:hover:text-purple-300 font-medium"
+                >
+                  Learn about The Graph →
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* How It Works Section */}
+        <div className="mb-12 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-700 rounded-lg p-8">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 text-center">
+            How DeFiPunk Subgraph Works
+          </h2>
+          <div className="grid gap-6 md:grid-cols-3">
+            <div className="text-center">
+              <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-white font-bold">1</span>
+              </div>
+              <h3 className="font-semibold text-gray-900 dark:text-white mb-2">DeFiScan Analysis</h3>
+              <p className="text-sm text-gray-600 dark:text-gray-300">
+                We analyze protocols using DeFiScan's rigorous framework, examining decentralization across 5 key dimensions
+              </p>
+            </div>
+            <div className="text-center">
+              <div className="w-12 h-12 bg-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-white font-bold">2</span>
+              </div>
+              <h3 className="font-semibold text-gray-900 dark:text-white mb-2">Live Data Integration</h3>
+              <p className="text-sm text-gray-600 dark:text-gray-300">
+                Real-time protocol data from DeFiLlama and on-chain analytics from The Graph subgraphs
+              </p>
+            </div>
+            <div className="text-center">
+              <div className="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-white font-bold">3</span>
+              </div>
+              <h3 className="font-semibold text-gray-900 dark:text-white mb-2">Cypherpunk Scoring</h3>
+              <p className="text-sm text-gray-600 dark:text-gray-300">
+                Weighted scoring system that quantifies alignment with cypherpunk values of privacy, decentralization, and autonomy
+              </p>
+            </div>
+          </div>
+        </div>
+
         {/* Protocols List */}
         <div className="bg-white dark:bg-gray-800 shadow rounded-lg">
+          <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+              Curated DeFi Protocols
+            </h2>
+            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+              Click any protocol to view detailed analysis, DeFiScan ratings, and live subgraph data
+            </p>
+          </div>
           <ul role="list" className="divide-y divide-gray-100 dark:divide-gray-700">
             {protocols.map((protocol) => (
               <li key={protocol.id} className="flex items-center justify-between gap-x-6 py-5 px-6">
