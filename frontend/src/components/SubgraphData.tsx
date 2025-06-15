@@ -1,8 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Activity, TrendingUp, Clock, Hash, Shield, Zap, Layers, Settings } from 'lucide-react'
-import { subgraphService, LiquitySubgraphData, AaveSubgraphData, MorphoSubgraphData, CompoundSubgraphData, ActivePoolETHBalanceUpdated } from '../services/subgraph'
+import { Activity, TrendingUp, Clock, Hash, Shield, Zap, Layers, Settings, CheckCircle, ArrowRightLeft } from 'lucide-react'
+import { subgraphService, LiquitySubgraphData, AaveSubgraphData, MorphoSubgraphData, CompoundSubgraphData, SkySubgraphData, DyadSubgraphData, ActivePoolETHBalanceUpdated } from '../services/subgraph'
 
 interface SubgraphDataProps {
   protocolSlug: string
@@ -13,12 +13,14 @@ export default function SubgraphData({ protocolSlug }: SubgraphDataProps) {
   const [aaveData, setAaveData] = useState<AaveSubgraphData | null>(null)
   const [morphoData, setMorphoData] = useState<MorphoSubgraphData | null>(null)
   const [compoundData, setCompoundData] = useState<CompoundSubgraphData | null>(null)
+  const [skyData, setSkyData] = useState<SkySubgraphData | null>(null)
+  const [dyadData, setDyadData] = useState<DyadSubgraphData | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     async function fetchSubgraphData() {
-      if (!['liquity-v1', 'aave-v3', 'morpho-blue', 'compound-v3'].includes(protocolSlug)) {
+      if (!['liquity-v1', 'aave-v3', 'morpho-blue', 'compound-v3', 'sky-lending', 'dyad'].includes(protocolSlug)) {
         setLoading(false)
         return
       }
@@ -37,6 +39,12 @@ export default function SubgraphData({ protocolSlug }: SubgraphDataProps) {
         } else if (protocolSlug === 'compound-v3') {
           const data = await subgraphService.getCompoundData()
           setCompoundData(data)
+        } else if (protocolSlug === 'sky-lending') {
+          const data = await subgraphService.getSkyData()
+          setSkyData(data)
+        } else if (protocolSlug === 'dyad') {
+          const data = await subgraphService.getDyadData()
+          setDyadData(data)
         }
       } catch (err) {
         setError('Failed to fetch on-chain data')
@@ -49,7 +57,7 @@ export default function SubgraphData({ protocolSlug }: SubgraphDataProps) {
     fetchSubgraphData()
   }, [protocolSlug])
 
-  if (!['liquity-v1', 'aave-v3', 'morpho-blue', 'compound-v3'].includes(protocolSlug)) {
+  if (!['liquity-v1', 'aave-v3', 'morpho-blue', 'compound-v3', 'sky-lending', 'dyad'].includes(protocolSlug)) {
     return (
       <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-6">
         <div className="text-center">
@@ -83,7 +91,7 @@ export default function SubgraphData({ protocolSlug }: SubgraphDataProps) {
     )
   }
 
-  if (error || (!liquityData && !aaveData && !morphoData && !compoundData)) {
+  if (error || (!liquityData && !aaveData && !morphoData && !compoundData && !skyData && !dyadData)) {
     return (
       <div className="bg-red-50 dark:bg-red-900/20 rounded-lg p-6">
         <div className="text-center">
@@ -692,6 +700,402 @@ export default function SubgraphData({ protocolSlug }: SubgraphDataProps) {
             Data sourced from{' '}
             <a 
               href="https://api.studio.thegraph.com/query/113928/defiscan-compound-v3/version/latest"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 dark:text-blue-400 hover:underline"
+            >
+              The Graph's Subgraph Studio
+            </a>
+            {' '}• Real-time blockchain indexing for true decentralization
+          </p>
+        </div>
+      </div>
+    )
+  }
+
+  // Render Sky Lending data
+  if (protocolSlug === 'sky-lending' && skyData) {
+    return (
+      <div className="space-y-6">
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center">
+            <CheckCircle className="h-6 w-6 text-teal-600 dark:text-teal-400 mr-3" />
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
+              Live Protocol Analytics
+            </h3>
+          </div>
+          <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
+            <div className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></div>
+            Powered by The Graph
+          </div>
+        </div>
+
+        {/* Key Metrics */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="bg-gradient-to-br from-sky-50 to-blue-50 dark:from-sky-900/20 dark:to-blue-900/20 rounded-lg p-6 border border-sky-200 dark:border-sky-800">
+            <div className="flex items-center justify-between mb-4">
+              <h4 className="text-lg font-medium text-gray-900 dark:text-white">
+                Token Approvals
+              </h4>
+              <CheckCircle className="h-5 w-5 text-sky-500" />
+            </div>
+            <div className="text-3xl font-bold text-sky-600 dark:text-sky-400 mb-2">
+              {skyData.approvals.length}
+            </div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">
+              Approval events tracked
+            </div>
+          </div>
+
+          <div className="bg-gradient-to-br from-emerald-50 to-green-50 dark:from-emerald-900/20 dark:to-green-900/20 rounded-lg p-6 border border-emerald-200 dark:border-emerald-800">
+            <div className="flex items-center justify-between mb-4">
+              <h4 className="text-lg font-medium text-gray-900 dark:text-white">
+                Log Notes
+              </h4>
+              <Hash className="h-5 w-5 text-emerald-500" />
+            </div>
+            <div className="text-3xl font-bold text-emerald-600 dark:text-emerald-400 mb-2">
+              {skyData.logNotes.length}
+            </div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">
+              Protocol log events tracked
+            </div>
+          </div>
+        </div>
+
+        {/* Recent Approvals */}
+        {skyData.approvals.length > 0 && (
+          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+            <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+              <h4 className="text-lg font-medium text-gray-900 dark:text-white">
+                Recent Token Approvals
+              </h4>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                Live data from Sky Lending's approval events
+              </p>
+            </div>
+            
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                <thead className="bg-gray-50 dark:bg-gray-900">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      Source
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      Spender
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      Amount
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      Event ID
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                  {skyData.approvals.slice(0, 5).map((approval, index) => (
+                    <tr key={approval.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm font-mono text-gray-900 dark:text-white">
+                          {subgraphService.formatAddress(approval.src)}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm font-mono text-gray-900 dark:text-white">
+                          {subgraphService.formatAddress(approval.guy)}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-500 dark:text-gray-400">
+                          {subgraphService.formatETH(approval.wad)}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="flex items-center">
+                          <Hash className="h-4 w-4 text-gray-400 mr-2" />
+                          <div className="text-sm text-gray-500 dark:text-gray-400 font-mono">
+                            {approval.id.slice(0, 10)}...{approval.id.slice(-8)}
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {/* Recent Log Notes */}
+        {skyData.logNotes.length > 0 && (
+          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+            <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+              <h4 className="text-lg font-medium text-gray-900 dark:text-white">
+                Recent Log Notes
+              </h4>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                Live data from Sky Lending's log note events
+              </p>
+            </div>
+            
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                <thead className="bg-gray-50 dark:bg-gray-900">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      Signature
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      User
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      Argument
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      Event ID
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                  {skyData.logNotes.slice(0, 5).map((logNote, index) => (
+                    <tr key={logNote.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm font-mono text-gray-900 dark:text-white">
+                          {logNote.sig.slice(0, 10)}...
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm font-mono text-gray-900 dark:text-white">
+                          {subgraphService.formatAddress(logNote.usr)}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm font-mono text-gray-500 dark:text-gray-400">
+                          {logNote.arg1.slice(0, 10)}...
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="flex items-center">
+                          <Hash className="h-4 w-4 text-gray-400 mr-2" />
+                          <div className="text-sm text-gray-500 dark:text-gray-400 font-mono">
+                            {logNote.id.slice(0, 10)}...{logNote.id.slice(-8)}
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {/* Footer */}
+        <div className="text-center text-sm text-gray-500 dark:text-gray-400">
+          <p>
+            Data sourced from{' '}
+            <a 
+              href="https://api.studio.thegraph.com/query/113929/defiscan-sky/version/latest"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 dark:text-blue-400 hover:underline"
+            >
+              The Graph's Subgraph Studio
+            </a>
+            {' '}• Real-time blockchain indexing for true decentralization
+          </p>
+        </div>
+      </div>
+    )
+  }
+
+  // Render Dyad data
+  if (protocolSlug === 'dyad' && dyadData) {
+    return (
+      <div className="space-y-6">
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center">
+            <ArrowRightLeft className="h-6 w-6 text-teal-600 dark:text-teal-400 mr-3" />
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
+              Live Protocol Analytics
+            </h3>
+          </div>
+          <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
+            <div className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></div>
+            Powered by The Graph
+          </div>
+        </div>
+
+        {/* Key Metrics */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-lg p-6 border border-purple-200 dark:border-purple-800">
+            <div className="flex items-center justify-between mb-4">
+              <h4 className="text-lg font-medium text-gray-900 dark:text-white">
+                Token Approvals
+              </h4>
+              <CheckCircle className="h-5 w-5 text-purple-500" />
+            </div>
+            <div className="text-3xl font-bold text-purple-600 dark:text-purple-400 mb-2">
+              {dyadData.approvals.length}
+            </div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">
+              Approval events tracked
+            </div>
+          </div>
+
+          <div className="bg-gradient-to-br from-rose-50 to-red-50 dark:from-rose-900/20 dark:to-red-900/20 rounded-lg p-6 border border-rose-200 dark:border-rose-800">
+            <div className="flex items-center justify-between mb-4">
+              <h4 className="text-lg font-medium text-gray-900 dark:text-white">
+                Token Transfers
+              </h4>
+              <ArrowRightLeft className="h-5 w-5 text-rose-500" />
+            </div>
+            <div className="text-3xl font-bold text-rose-600 dark:text-rose-400 mb-2">
+              {dyadData.transfers.length}
+            </div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">
+              Transfer events tracked
+            </div>
+          </div>
+        </div>
+
+        {/* Recent Approvals */}
+        {dyadData.approvals.length > 0 && (
+          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+            <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+              <h4 className="text-lg font-medium text-gray-900 dark:text-white">
+                Recent Token Approvals
+              </h4>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                Live data from Dyad's approval events
+              </p>
+            </div>
+            
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                <thead className="bg-gray-50 dark:bg-gray-900">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      Owner
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      Spender
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      Amount
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      Event ID
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                  {dyadData.approvals.slice(0, 5).map((approval, index) => (
+                    <tr key={approval.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm font-mono text-gray-900 dark:text-white">
+                          {subgraphService.formatAddress(approval.owner)}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm font-mono text-gray-900 dark:text-white">
+                          {subgraphService.formatAddress(approval.spender)}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-500 dark:text-gray-400">
+                          {subgraphService.formatETH(approval.amount)}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="flex items-center">
+                          <Hash className="h-4 w-4 text-gray-400 mr-2" />
+                          <div className="text-sm text-gray-500 dark:text-gray-400 font-mono">
+                            {approval.id.slice(0, 10)}...{approval.id.slice(-8)}
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {/* Recent Transfers */}
+        {dyadData.transfers.length > 0 && (
+          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+            <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+              <h4 className="text-lg font-medium text-gray-900 dark:text-white">
+                Recent Token Transfers
+              </h4>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                Live data from Dyad's transfer events
+              </p>
+            </div>
+            
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                <thead className="bg-gray-50 dark:bg-gray-900">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      From
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      To
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      Amount
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      Event ID
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                  {dyadData.transfers.slice(0, 5).map((transfer, index) => (
+                    <tr key={transfer.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm font-mono text-gray-900 dark:text-white">
+                          {subgraphService.formatAddress(transfer.from)}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm font-mono text-gray-900 dark:text-white">
+                          {subgraphService.formatAddress(transfer.to)}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-500 dark:text-gray-400">
+                          {subgraphService.formatETH(transfer.amount)}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="flex items-center">
+                          <Hash className="h-4 w-4 text-gray-400 mr-2" />
+                          <div className="text-sm text-gray-500 dark:text-gray-400 font-mono">
+                            {transfer.id.slice(0, 10)}...{transfer.id.slice(-8)}
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {/* Footer */}
+        <div className="text-center text-sm text-gray-500 dark:text-gray-400">
+          <p>
+            Data sourced from{' '}
+            <a 
+              href="https://api.studio.thegraph.com/query/113929/defiscan-dyad/version/latest"
               target="_blank"
               rel="noopener noreferrer"
               className="text-blue-600 dark:text-blue-400 hover:underline"

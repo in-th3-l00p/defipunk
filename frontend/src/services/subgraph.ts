@@ -68,6 +68,46 @@ export interface CompoundSubgraphData {
   beaconUpgradeds: BeaconUpgraded[];
 }
 
+// Sky Lending specific interfaces
+export interface Approval {
+  id: string;
+  src: string;
+  guy: string;
+  wad: string;
+}
+
+export interface LogNote {
+  id: string;
+  sig: string;
+  usr: string;
+  arg1: string;
+}
+
+export interface SkySubgraphData {
+  approvals: Approval[];
+  logNotes: LogNote[];
+}
+
+// Dyad specific interfaces
+export interface DyadApproval {
+  id: string;
+  owner: string;
+  spender: string;
+  amount: string;
+}
+
+export interface Transfer {
+  id: string;
+  from: string;
+  to: string;
+  amount: string;
+}
+
+export interface DyadSubgraphData {
+  approvals: DyadApproval[];
+  transfers: Transfer[];
+}
+
 class SubgraphService {
   private configs: Record<string, SubgraphConfig> = {
     'liquity-v1': {
@@ -85,54 +125,57 @@ class SubgraphService {
     'compound-v3': {
       url: 'https://api.studio.thegraph.com/query/113929/defiscan-compound-v-3/version/latest',
       apiKey: '07e6c18506441560cfded94af605566e'
+    },
+    'sky-lending': {
+      url: 'https://api.studio.thegraph.com/query/113929/defiscan-sky/version/latest',
+      apiKey: '07e6c18506441560cfded94af605566e'
+    },
+    'dyad': {
+      url: 'https://api.studio.thegraph.com/query/113929/defiscan-dyad/version/latest',
+      apiKey: '07e6c18506441560cfded94af605566e'
     }
   };
 
-  private async query<T>(protocol: string, query: string): Promise<T> {
-    const config = this.configs[protocol];
+  private async query<T>(protocolSlug: string, query: string): Promise<T> {
+    const config = this.configs[protocolSlug];
     if (!config) {
-      throw new Error(`No subgraph configuration found for protocol: ${protocol}`);
+      throw new Error(`No subgraph configuration found for ${protocolSlug}`);
     }
 
-    try {
-      const response = await fetch(config.url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${config.apiKey}`,
-        },
-        body: JSON.stringify({ query }),
-      });
+    const response = await fetch(config.url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${config.apiKey}`,
+      },
+      body: JSON.stringify({ query }),
+    });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const result = await response.json();
-      
-      if (result.errors) {
-        throw new Error(`GraphQL errors: ${JSON.stringify(result.errors)}`);
-      }
-
-      return result.data;
-    } catch (error) {
-      console.error(`Error querying subgraph for ${protocol}:`, error);
-      throw error;
+    if (!response.ok) {
+      throw new Error(`Subgraph query failed: ${response.statusText}`);
     }
+
+    const result = await response.json();
+    
+    if (result.errors) {
+      throw new Error(`GraphQL errors: ${JSON.stringify(result.errors)}`);
+    }
+
+    return result.data;
   }
 
   async getLiquityData(): Promise<LiquitySubgraphData> {
     const query = `
       {
-        activePoolAddressChangeds(first: 10, orderBy: blockTimestamp, orderDirection: desc) {
-          id
-          _newActivePoolAddress
-          blockNumber
-          blockTimestamp
-        }
         activePoolETHBalanceUpdateds(first: 10, orderBy: blockTimestamp, orderDirection: desc) {
           id
           _ETH
+          blockNumber
+          blockTimestamp
+        }
+        activePoolAddressChangeds(first: 5, orderBy: blockTimestamp, orderDirection: desc) {
+          id
+          _newActivePoolAddress
           blockNumber
           blockTimestamp
         }
@@ -156,6 +199,9 @@ class SubgraphService {
           reserve
           backer
           amount
+          fee
+          blockNumber
+          blockTimestamp
         }
       }
     `;
@@ -197,6 +243,48 @@ class SubgraphService {
     `;
 
     return this.query<CompoundSubgraphData>('compound-v3', query);
+  }
+
+  async getSkyData(): Promise<SkySubgraphData> {
+    const query = `
+      {
+        approvals(first: 10, orderBy: id, orderDirection: desc) {
+          id
+          src
+          guy
+          wad
+        }
+        logNotes(first: 10, orderBy: id, orderDirection: desc) {
+          id
+          sig
+          usr
+          arg1
+        }
+      }
+    `;
+
+    return this.query<SkySubgraphData>('sky-lending', query);
+  }
+
+  async getDyadData(): Promise<DyadSubgraphData> {
+    const query = `
+      {
+        approvals(first: 10, orderBy: id, orderDirection: desc) {
+          id
+          owner
+          spender
+          amount
+        }
+        transfers(first: 10, orderBy: id, orderDirection: desc) {
+          id
+          from
+          to
+          amount
+        }
+      }
+    `;
+
+    return this.query<DyadSubgraphData>('dyad', query);
   }
 
   // Helper function to format ETH values
