@@ -1,0 +1,277 @@
+[
+  {
+    "name": "ActivePoolAddressChanged",
+    "type": "event",
+    "inputs": [
+      {
+        "name": "_newActivePoolAddress",
+        "type": "address",
+        "indexed": false,
+        "internalType": "address"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "name": "ActivePoolETHBalanceUpdated",
+    "type": "event",
+    "inputs": [
+      {
+        "name": "_ETH",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "name": "ActivePoolLUSDDebtUpdated",
+    "type": "event",
+    "inputs": [
+      {
+        "name": "_LUSDDebt",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "name": "BorrowerOperationsAddressChanged",
+    "type": "event",
+    "inputs": [
+      {
+        "name": "_newBorrowerOperationsAddress",
+        "type": "address",
+        "indexed": false,
+        "internalType": "address"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "name": "DefaultPoolAddressChanged",
+    "type": "event",
+    "inputs": [
+      {
+        "name": "_newDefaultPoolAddress",
+        "type": "address",
+        "indexed": false,
+        "internalType": "address"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "name": "ETHBalanceUpdated",
+    "type": "event",
+    "inputs": [
+      {
+        "name": "_newBalance",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "name": "EtherSent",
+    "type": "event",
+    "inputs": [
+      {
+        "name": "_to",
+        "type": "address",
+        "indexed": false,
+        "internalType": "address"
+      },
+      {
+        "name": "_amount",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "name": "LUSDBalanceUpdated",
+    "type": "event",
+    "inputs": [
+      {
+        "name": "_newBalance",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "name": "OwnershipTransferred",
+    "type": "event",
+    "inputs": [
+      {
+        "name": "previousOwner",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "newOwner",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "name": "StabilityPoolAddressChanged",
+    "type": "event",
+    "inputs": [
+      {
+        "name": "_newStabilityPoolAddress",
+        "type": "address",
+        "indexed": false,
+        "internalType": "address"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "name": "TroveManagerAddressChanged",
+    "type": "event",
+    "inputs": [
+      {
+        "name": "_newTroveManagerAddress",
+        "type": "address",
+        "indexed": false,
+        "internalType": "address"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "name": "NAME",
+    "type": "function",
+    "inputs": [],
+    "outputs": [{ "name": "", "type": "string", "internalType": "string" }],
+    "stateMutability": "view"
+  },
+  {
+    "name": "borrowerOperationsAddress",
+    "type": "function",
+    "inputs": [],
+    "outputs": [{ "name": "", "type": "address", "internalType": "address" }],
+    "stateMutability": "view"
+  },
+  {
+    "name": "decreaseLUSDDebt",
+    "type": "function",
+    "inputs": [
+      { "name": "_amount", "type": "uint256", "internalType": "uint256" }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "name": "defaultPoolAddress",
+    "type": "function",
+    "inputs": [],
+    "outputs": [{ "name": "", "type": "address", "internalType": "address" }],
+    "stateMutability": "view"
+  },
+  {
+    "name": "getETH",
+    "type": "function",
+    "inputs": [],
+    "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+    "stateMutability": "view"
+  },
+  {
+    "name": "getLUSDDebt",
+    "type": "function",
+    "inputs": [],
+    "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+    "stateMutability": "view"
+  },
+  {
+    "name": "increaseLUSDDebt",
+    "type": "function",
+    "inputs": [
+      { "name": "_amount", "type": "uint256", "internalType": "uint256" }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "name": "isOwner",
+    "type": "function",
+    "inputs": [],
+    "outputs": [{ "name": "", "type": "bool", "internalType": "bool" }],
+    "stateMutability": "view"
+  },
+  {
+    "name": "owner",
+    "type": "function",
+    "inputs": [],
+    "outputs": [{ "name": "", "type": "address", "internalType": "address" }],
+    "stateMutability": "view"
+  },
+  {
+    "name": "sendETH",
+    "type": "function",
+    "inputs": [
+      { "name": "_account", "type": "address", "internalType": "address" },
+      { "name": "_amount", "type": "uint256", "internalType": "uint256" }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "name": "setAddresses",
+    "type": "function",
+    "inputs": [
+      {
+        "name": "_borrowerOperationsAddress",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "_troveManagerAddress",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "_stabilityPoolAddress",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "_defaultPoolAddress",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "name": "stabilityPoolAddress",
+    "type": "function",
+    "inputs": [],
+    "outputs": [{ "name": "", "type": "address", "internalType": "address" }],
+    "stateMutability": "view"
+  },
+  {
+    "name": "troveManagerAddress",
+    "type": "function",
+    "inputs": [],
+    "outputs": [{ "name": "", "type": "address", "internalType": "address" }],
+    "stateMutability": "view"
+  },
+  { "type": "receive", "stateMutability": "payable" }
+]

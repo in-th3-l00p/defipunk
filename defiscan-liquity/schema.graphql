@@ -1,0 +1,89 @@
+type ActivePoolAddressChanged @entity(immutable: true) {
+  id: Bytes!
+  _newActivePoolAddress: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type ActivePoolETHBalanceUpdated @entity(immutable: true) {
+  id: Bytes!
+  _ETH: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type ActivePoolLUSDDebtUpdated @entity(immutable: true) {
+  id: Bytes!
+  _LUSDDebt: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type BorrowerOperationsAddressChanged @entity(immutable: true) {
+  id: Bytes!
+  _newBorrowerOperationsAddress: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type DefaultPoolAddressChanged @entity(immutable: true) {
+  id: Bytes!
+  _newDefaultPoolAddress: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type ETHBalanceUpdated @entity(immutable: true) {
+  id: Bytes!
+  _newBalance: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type EtherSent @entity(immutable: true) {
+  id: Bytes!
+  _to: Bytes! # address
+  _amount: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type LUSDBalanceUpdated @entity(immutable: true) {
+  id: Bytes!
+  _newBalance: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type OwnershipTransferred @entity(immutable: true) {
+  id: Bytes!
+  previousOwner: Bytes! # address
+  newOwner: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type StabilityPoolAddressChanged @entity(immutable: true) {
+  id: Bytes!
+  _newStabilityPoolAddress: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type TroveManagerAddressChanged @entity(immutable: true) {
+  id: Bytes!
+  _newTroveManagerAddress: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}

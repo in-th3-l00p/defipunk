@@ -1,0 +1,56 @@
+specVersion: 1.3.0
+indexerHints:
+  prune: auto
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: ActivePool
+    network: mainnet
+    source:
+      address: "0xDf9Eb223bAFBE5c5271415C75aeCD68C21fE3D7F"
+      abi: ActivePool
+      startBlock: 12178562
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.9
+      language: wasm/assemblyscript
+      entities:
+        - ActivePoolAddressChanged
+        - ActivePoolETHBalanceUpdated
+        - ActivePoolLUSDDebtUpdated
+        - BorrowerOperationsAddressChanged
+        - DefaultPoolAddressChanged
+        - ETHBalanceUpdated
+        - EtherSent
+        - LUSDBalanceUpdated
+        - OwnershipTransferred
+        - StabilityPoolAddressChanged
+        - TroveManagerAddressChanged
+      abis:
+        - name: ActivePool
+          file: ./abis/ActivePool.json
+      eventHandlers:
+        - event: ActivePoolAddressChanged(address)
+          handler: handleActivePoolAddressChanged
+        - event: ActivePoolETHBalanceUpdated(uint256)
+          handler: handleActivePoolETHBalanceUpdated
+        - event: ActivePoolLUSDDebtUpdated(uint256)
+          handler: handleActivePoolLUSDDebtUpdated
+        - event: BorrowerOperationsAddressChanged(address)
+          handler: handleBorrowerOperationsAddressChanged
+        - event: DefaultPoolAddressChanged(address)
+          handler: handleDefaultPoolAddressChanged
+        - event: ETHBalanceUpdated(uint256)
+          handler: handleETHBalanceUpdated
+        - event: EtherSent(address,uint256)
+          handler: handleEtherSent
+        - event: LUSDBalanceUpdated(uint256)
+          handler: handleLUSDBalanceUpdated
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: StabilityPoolAddressChanged(address)
+          handler: handleStabilityPoolAddressChanged
+        - event: TroveManagerAddressChanged(address)
+          handler: handleTroveManagerAddressChanged
+      file: ./src/active-pool.ts
