@@ -1,24 +1,62 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# DeFiPunk Subgraph
 
-## Getting Started
+A cypherpunk scorecard for DeFi protocols that quantifies alignment with cypherpunk values through comprehensive analysis of decentralization, open source development, self-custody, privacy, immutability, and permissionless access.
 
-First, run the development server:
+## Features
+
+- **Protocol Analysis**: Curated analysis of 6 major DeFi protocols (Liquity, Morpho, Aave v3, Compound v3, Sky, Dyad)
+- **DeFiPunk Scoring**: 0-100 alignment scores based on cypherpunk values
+- **Live Data**: Real-time TVL and metrics from DeFiLlama API
+- **Subgraph Analytics**: On-chain analytics powered by The Graph
+- **DeFiScan Integration**: Stage ratings and detailed security analysis
+- **AI Assistant**: Chat with DeFiPunk AI for protocol insights and comparisons
+
+## Setup
+
+### Environment Variables
+
+Create a `.env.local` file in the root directory:
 
 ```bash
+# Required for AI Chat functionality
+OPENAI_API_KEY=your_openai_api_key_here
+```
+
+### Installation
+
+First, install dependencies and run the development server:
+
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Usage
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Main Features
+
+1. **Protocol List**: View all curated protocols with DeFiPunk scores and live TVL data
+2. **Protocol Details**: Click any protocol to see detailed analysis, DeFiScan ratings, and live subgraph data
+3. **AI Chat**: Click "Ask DeFiPunk AI" to chat with an AI assistant about protocol security and cypherpunk alignment
+
+### DeFiPunk Scoring Criteria
+
+- **Decentralization (25%)**: Governance structure, admin controls, multisig dependencies
+- **Open Source (20%)**: Code availability, transparency, auditability  
+- **Self-Custody (20%)**: Non-custodial design, user control over assets
+- **Privacy (15%)**: KYC requirements, transaction privacy, anonymity
+- **Immutability (10%)**: Upgradeability risks, contract immutability
+- **Permissionless (10%)**: Access restrictions, censorship resistance
+
+### Supported Protocols
+
+- **Liquity v1** (91/100, Stage 2): Fully immutable lending protocol
+- **Morpho Blue** (79/100, Stage 1): Permissionless lending markets
+- **Aave v3** (58/100, Stage 0): Upgradeable lending with governance
+- **Compound v3** (54/100, Stage 0): Guardian-controlled lending
+- **Sky Lending** (49/100, Stage 0): USDC-dependent CDP system
+- **Dyad** (44/100, Stage 0): Team-controlled stablecoin protocol
 
 ## Learn More
 

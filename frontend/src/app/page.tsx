@@ -101,6 +101,15 @@ export default function Home() {
             <span>•</span>
             <span>🛡️ Analyzed by DeFiScan</span>
           </div>
+          
+          <div className="mt-8 flex justify-center">
+            <a
+              href="/chat"
+              className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+            >
+              🤖 Ask DeFiPunk AI
+            </a>
+          </div>
         </div>
 
         {/* Protocols List */}
