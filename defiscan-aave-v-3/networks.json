@@ -3,6 +3,9 @@
     "InitializableImmutableAdminUpgradeabilityProxy": {
       "address": "0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2",
       "startBlock": 16291127
+    },
+    "PoolInstance": {
+      "address": "0x9aEb8aAA1cA38634Aa8C0c8933E7fB4D61091327"
     }
   }
 }

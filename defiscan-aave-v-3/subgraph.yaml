@@ -24,3 +24,74 @@ dataSources:
         - event: Upgraded(indexed address)
           handler: handleUpgraded
       file: ./src/initializable-immutable-admin-upgradeability-proxy.ts
+  - kind: ethereum
+    name: PoolInstance
+    network: mainnet
+    source:
+      address: "0x9aEb8aAA1cA38634Aa8C0c8933E7fB4D61091327"
+      abi: PoolInstance
+      startBlock: 21780615
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.9
+      language: wasm/assemblyscript
+      entities:
+        - BackUnbacked
+        - Borrow
+        - DeficitCovered
+        - DeficitCreated
+        - FlashLoan
+        - IsolationModeTotalDebtUpdated
+        - LiquidationCall
+        - MintUnbacked
+        - MintedToTreasury
+        - Repay
+        - ReserveDataUpdated
+        - ReserveDataUpdated1
+        - ReserveUsedAsCollateralDisabled
+        - ReserveUsedAsCollateralEnabled
+        - Supply
+        - UserEModeSet
+        - Withdraw
+      abis:
+        - name: PoolInstance
+          file: ./abis/PoolInstance.json
+      eventHandlers:
+        - event: BackUnbacked(indexed address,indexed address,uint256,uint256)
+          handler: handleBackUnbacked
+        - event: Borrow(indexed address,address,indexed address,uint256,uint8,uint256,indexed
+            uint16)
+          handler: handleBorrow
+        - event: DeficitCovered(indexed address,address,uint256)
+          handler: handleDeficitCovered
+        - event: DeficitCreated(indexed address,indexed address,uint256)
+          handler: handleDeficitCreated
+        - event: FlashLoan(indexed address,address,indexed address,uint256,uint8,uint256,indexed
+            uint16)
+          handler: handleFlashLoan
+        - event: IsolationModeTotalDebtUpdated(indexed address,uint256)
+          handler: handleIsolationModeTotalDebtUpdated
+        - event: LiquidationCall(indexed address,indexed address,indexed
+            address,uint256,uint256,address,bool)
+          handler: handleLiquidationCall
+        - event: MintUnbacked(indexed address,address,indexed address,uint256,indexed uint16)
+          handler: handleMintUnbacked
+        - event: MintedToTreasury(indexed address,uint256)
+          handler: handleMintedToTreasury
+        - event: Repay(indexed address,indexed address,indexed address,uint256,bool)
+          handler: handleRepay
+        - event: ReserveDataUpdated(indexed address,uint256,uint256,uint256,uint256,uint256)
+          handler: handleReserveDataUpdated
+        - event: ReserveDataUpdated(indexed address,uint256,uint256,uint256,uint256,uint256)
+          handler: handleReserveDataUpdated1
+        - event: ReserveUsedAsCollateralDisabled(indexed address,indexed address)
+          handler: handleReserveUsedAsCollateralDisabled
+        - event: ReserveUsedAsCollateralEnabled(indexed address,indexed address)
+          handler: handleReserveUsedAsCollateralEnabled
+        - event: Supply(indexed address,address,indexed address,uint256,indexed uint16)
+          handler: handleSupply
+        - event: UserEModeSet(indexed address,uint8)
+          handler: handleUserEModeSet
+        - event: Withdraw(indexed address,indexed address,indexed address,uint256)
+          handler: handleWithdraw
+      file: ./src/pool-instance.ts
