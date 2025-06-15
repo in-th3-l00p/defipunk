@@ -134,6 +134,28 @@ const SCORING_WEIGHTS = {
 // - Oracle: Chainlink feeds with no validation or fallback mechanisms
 // - Accessibility: Open source frontend but depends on centralized backend (v3-api.compound.finance)
 //
+// SKY LENDING ANALYSIS (Based on DeFiScan Stage 0 Assessment):
+// - Website: https://sky.money/
+// - Twitter: https://x.com/SkyEcosystem
+// - GitHub: https://github.com/makerdao (protocol code)
+// - Chain: Ethereum Mainnet
+// - Stage: Stage 0 (High centralization risk across upgradeability, autonomy, exit window)
+// - Key Features:
+//   * Stablecoin protocol for minting USDS through Collateralized Debt Positions
+//   * Built on Maker protocol, replaces DAI with 1:1 DAI<->USDS conversion
+//   * sUSDS yield-bearing staking token for USDS holders
+//   * Multi-collateral CDP system with various crypto assets
+// - Major Risks:
+//   * High Upgradeability Risk: USDS/sUSDS fully upgradeable, critical parameters mutable
+//   * High Autonomy Risk: Direct USDC dependency (>50% backing possible), Chronicle oracle
+//   * High Exit Window Risk: 18-hour minimum delay insufficient, emergency powers bypass delays
+//   * USDS directly pegged to USDC (centralized) instead of USD
+//   * Emergency Shutdown Module can irreversibly shutdown protocol (500k MKR threshold)
+// - Governance: MKR/SKY token holders, continuous approval system, 18-hour minimum delay
+// - Oracle: Chronicle price feeds with 1-hour delay, governance can freeze prices
+// - Dependencies: Circle USDC (1:1 minting), Chronicle oracles (medium centralization risk)
+// - Accessibility: Closed-source frontend, but multiple third-party interfaces available
+//
 const PROTOCOL_CHARACTERISTICS: Record<string, {
   decentralization: number;
   openSource: number;
@@ -199,12 +221,12 @@ const PROTOCOL_CHARACTERISTICS: Record<string, {
     permissionless: 85,
   },
   'sky-lending': {
-    decentralization: 75,
-    openSource: 100,
-    selfCustody: 100,
-    privacy: 25,
-    immutability: 80,
-    permissionless: 85,
+    decentralization: 30, // Stage 0 - High centralization risk across upgradeability, autonomy, exit window
+    openSource: 90, // GitHub available but main frontend not open source
+    selfCustody: 100, // Non-custodial CDP protocol, users control their collateral
+    privacy: 25, // Basic privacy (no KYC), but transactions are on-chain and traceable
+    immutability: 10, // High upgradeability risk - USDS/sUSDS upgradeable, emergency powers
+    permissionless: 70, // Generally permissionless but governance can pause contracts, emergency shutdown
   },
   'makerdao': {
     decentralization: 75,
