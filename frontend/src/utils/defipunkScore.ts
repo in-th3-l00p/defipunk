@@ -113,6 +113,27 @@ const SCORING_WEIGHTS = {
 // - Oracle: Permissionless choice by market creators, but heavy Chainlink dependency
 // - Accessibility: Multiple interfaces (app.morpho.org, fallback, self-hosted, third-party)
 //
+// COMPOUND V3 ANALYSIS (Based on DeFiScan Stage 0 Assessment):
+// - Website: https://compound.finance/
+// - Twitter: https://x.com/compoundfinance
+// - GitHub: https://github.com/compound-finance/compound-protocol
+// - Chain: Ethereum Mainnet
+// - Stage: Stage 0 (High centralization risk across upgradeability, autonomy, exit window)
+// - Key Features:
+//   * Lending protocol with base asset liquidity (USDC, WETH, USDT, wstETH, USDS)
+//   * Each base asset represents isolated lending market
+//   * Multiple collateral assets supported per market
+//   * COMP token governance system for parameter updates
+// - Major Risks:
+//   * High Upgradeability Risk: Fully upgradeable protocol (Governance + Comet contracts)
+//   * High Autonomy Risk: Chainlink oracle dependency with no validation or fallback
+//   * High Exit Window Risk: 2-day delay insufficient, guardians not security councils
+//   * ProposalGuardian can censor proposals, PauseGuardian can freeze markets
+//   * Guardian multisigs don't meet security council requirements
+// - Governance: COMP holders vote (25k COMP to propose, 400k votes minimum, 3-day voting, 2-day delay)
+// - Oracle: Chainlink feeds with no validation or fallback mechanisms
+// - Accessibility: Open source frontend but depends on centralized backend (v3-api.compound.finance)
+//
 const PROTOCOL_CHARACTERISTICS: Record<string, {
   decentralization: number;
   openSource: number;
@@ -162,12 +183,12 @@ const PROTOCOL_CHARACTERISTICS: Record<string, {
     permissionless: 85, // Generally permissionless but Emergency Admin can pause markets
   },
   'compound-v3': {
-    decentralization: 80,
-    openSource: 100,
-    selfCustody: 100,
-    privacy: 20,
-    immutability: 85,
-    permissionless: 90,
+    decentralization: 35, // Stage 0 - High centralization risk across upgradeability, autonomy, exit window
+    openSource: 100, // Fully open source on GitHub: https://github.com/compound-finance/compound-protocol
+    selfCustody: 100, // Non-custodial lending protocol, users control their assets
+    privacy: 20, // Basic privacy (no KYC), but transactions are on-chain and traceable
+    immutability: 15, // High upgradeability risk - fully upgradeable protocol, guardian powers
+    permissionless: 75, // Generally permissionless but PauseGuardian can freeze markets
   },
   'dyad': {
     decentralization: 75,
