@@ -55,6 +55,23 @@ const SCORING_WEIGHTS = {
 };
 
 // Known protocol characteristics (this would ideally come from a database or API)
+// 
+// LIQUITY V1 ANALYSIS (Based on DeFiScan Stage 2 Assessment):
+// - Website: https://www.liquity.org
+// - Twitter: https://x.com/LiquityProtocol  
+// - GitHub: https://github.com/liquity
+// - Chain: Ethereum Mainnet
+// - Stage: Stage 2 (Low centralization risk across all dimensions)
+// - Key Features:
+//   * Interest-free loans against ETH collateral (110% minimum ratio)
+//   * LUSD stablecoin (USD pegged)
+//   * Stability Pool mechanism for liquidations
+//   * Completely immutable - all permissions renounced (0x0 owners)
+//   * Multiple independent frontends available
+//   * Robust oracle fallback system (Chainlink primary, Tellor fallback, "last good price")
+// - Contracts: 17 core contracts all with renounced permissions
+// - Oracle Dependencies: Chainlink (primary) + Tellor (fallback) + last good price mechanism
+//
 const PROTOCOL_CHARACTERISTICS: Record<string, {
   decentralization: number;
   openSource: number;
@@ -64,12 +81,12 @@ const PROTOCOL_CHARACTERISTICS: Record<string, {
   permissionless: number;
 }> = {
   'liquity-v1': {
-    decentralization: 95,
-    openSource: 100,
-    selfCustody: 100,
-    privacy: 40,
-    immutability: 100,
-    permissionless: 100,
+    decentralization: 98, // Stage 2 - Fully immutable, no governance, all permissions renounced
+    openSource: 100, // Fully open source on GitHub: https://github.com/liquity
+    selfCustody: 100, // Non-custodial borrowing protocol, users control their collateral
+    privacy: 45, // Basic privacy (no KYC), but transactions are on-chain and traceable
+    immutability: 100, // Completely immutable - no upgrades possible, all permissions renounced
+    permissionless: 100, // Fully permissionless access, multiple independent frontends available
   },
   'morpho-blue': {
     decentralization: 80,
