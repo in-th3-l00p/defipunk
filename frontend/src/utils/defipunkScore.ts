@@ -18,14 +18,31 @@ export interface DeFiPunkProtocol {
 
 // Global filter list - only these protocols will be shown
 export const ALLOWED_PROTOCOLS = [
-  'liquity-v2', 
-  'morpho-aavev3',
+  'liquity-v1', 
+  'morpho-blue',
   'aave-v3',
   'compound-v3',
   'dyad',
   'sky-lending',
   'makerdao' // Include makerdao for compatibility
 ];
+
+// Mapping from DeFiLlama slugs to DeFiScan slugs
+export const DEFISCAN_SLUG_MAPPING: Record<string, string> = {
+  'liquity-v1': 'liquity',
+  'morpho-blue': 'morpho',
+  'aave-v3': 'aave-v3',
+  'compound-v3': 'compound-v3',
+  'dyad': 'dyad',
+  'sky-lending': 'sky',
+  'makerdao': 'makerdao'
+};
+
+// Helper function to get DeFiScan URL
+export function getDeFiScanUrl(defiLlamaSlug: string): string {
+  const defiscanSlug = DEFISCAN_SLUG_MAPPING[defiLlamaSlug.toLowerCase()] || defiLlamaSlug;
+  return `https://www.defiscan.info/protocols/${defiscanSlug}`;
+}
 
 // DeFiPunk scoring criteria weights
 const SCORING_WEIGHTS = {
@@ -53,22 +70,6 @@ const PROTOCOL_CHARACTERISTICS: Record<string, {
     privacy: 40,
     immutability: 100,
     permissionless: 100,
-  },
-  'liquity-v2': {
-    decentralization: 95,
-    openSource: 100,
-    selfCustody: 100,
-    privacy: 40,
-    immutability: 100,
-    permissionless: 100,
-  },
-  'ajna-v2': {
-    decentralization: 85,
-    openSource: 100,
-    selfCustody: 100,
-    privacy: 35,
-    immutability: 90,
-    permissionless: 95,
   },
   'morpho-blue': {
     decentralization: 80,

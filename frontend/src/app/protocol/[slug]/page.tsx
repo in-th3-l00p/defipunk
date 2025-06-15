@@ -6,7 +6,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { ChevronLeft, ExternalLink, Github, Globe, Twitter } from 'lucide-react'
 import { defiLlama, Protocol } from '../../../services/defiLlama'
-import { DeFiPunkProtocol, transformProtocolToDefipunk, ProtocolStatus } from '../../../utils/defipunkScore'
+import { DeFiPunkProtocol, transformProtocolToDefipunk, ProtocolStatus, getDeFiScanUrl } from '../../../utils/defipunkScore'
 
 const statuses: Record<ProtocolStatus, string> = {
   'High Score': 'text-green-700 bg-green-50 ring-green-600/20',
@@ -233,7 +233,7 @@ export default function ProtocolPage() {
                     </td>
                     <td className="py-3 text-sm text-gray-900 dark:text-white">
                       <a
-                        href={`https://defiscan.info/protocol/${rawProtocol.slug}`}
+                        href={getDeFiScanUrl(rawProtocol.slug)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
@@ -320,7 +320,7 @@ export default function ProtocolPage() {
                   <strong>For detailed decentralization analysis and security assessment, visit:</strong>
                 </p>
                 <a
-                  href={`https://defiscan.info/protocol/${rawProtocol.slug}`}
+                  href={getDeFiScanUrl(rawProtocol.slug)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-medium"
