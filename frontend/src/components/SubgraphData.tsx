@@ -1,8 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Activity, TrendingUp, Clock, Hash, Shield, Zap } from 'lucide-react'
-import { subgraphService, LiquitySubgraphData, AaveSubgraphData, ActivePoolETHBalanceUpdated } from '../services/subgraph'
+import { Activity, TrendingUp, Clock, Hash, Shield, Zap, Layers } from 'lucide-react'
+import { subgraphService, LiquitySubgraphData, AaveSubgraphData, MorphoSubgraphData, ActivePoolETHBalanceUpdated } from '../services/subgraph'
 
 interface SubgraphDataProps {
   protocolSlug: string
@@ -11,12 +11,13 @@ interface SubgraphDataProps {
 export default function SubgraphData({ protocolSlug }: SubgraphDataProps) {
   const [liquityData, setLiquityData] = useState<LiquitySubgraphData | null>(null)
   const [aaveData, setAaveData] = useState<AaveSubgraphData | null>(null)
+  const [morphoData, setMorphoData] = useState<MorphoSubgraphData | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     async function fetchSubgraphData() {
-      if (!['liquity-v1', 'aave-v3'].includes(protocolSlug)) {
+      if (!['liquity-v1', 'aave-v3', 'morpho-blue'].includes(protocolSlug)) {
         setLoading(false)
         return
       }
@@ -29,6 +30,9 @@ export default function SubgraphData({ protocolSlug }: SubgraphDataProps) {
         } else if (protocolSlug === 'aave-v3') {
           const data = await subgraphService.getAaveData()
           setAaveData(data)
+        } else if (protocolSlug === 'morpho-blue') {
+          const data = await subgraphService.getMorphoData()
+          setMorphoData(data)
         }
       } catch (err) {
         setError('Failed to fetch on-chain data')
@@ -41,7 +45,7 @@ export default function SubgraphData({ protocolSlug }: SubgraphDataProps) {
     fetchSubgraphData()
   }, [protocolSlug])
 
-  if (!['liquity-v1', 'aave-v3'].includes(protocolSlug)) {
+  if (!['liquity-v1', 'aave-v3', 'morpho-blue'].includes(protocolSlug)) {
     return (
       <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-6">
         <div className="text-center">
@@ -75,7 +79,7 @@ export default function SubgraphData({ protocolSlug }: SubgraphDataProps) {
     )
   }
 
-  if (error || (!liquityData && !aaveData)) {
+  if (error || (!liquityData && !aaveData && !morphoData)) {
     return (
       <div className="bg-red-50 dark:bg-red-900/20 rounded-lg p-6">
         <div className="text-center">
@@ -352,6 +356,140 @@ export default function SubgraphData({ protocolSlug }: SubgraphDataProps) {
             Data sourced from{' '}
             <a 
               href="https://api.studio.thegraph.com/query/113928/defiscan-aave-v-3/version/latest"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 dark:text-blue-400 hover:underline"
+            >
+              The Graph's Subgraph Studio
+            </a>
+            {' '}• Real-time blockchain indexing for true decentralization
+          </p>
+        </div>
+      </div>
+    )
+  }
+
+  // Render Morpho data
+  if (protocolSlug === 'morpho-blue' && morphoData) {
+    return (
+      <div className="space-y-6">
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center">
+            <Layers className="h-6 w-6 text-teal-600 dark:text-teal-400 mr-3" />
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
+              Live Protocol Analytics
+            </h3>
+          </div>
+          <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
+            <div className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></div>
+            Powered by The Graph
+          </div>
+        </div>
+
+        {/* Key Metrics */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="bg-gradient-to-br from-teal-50 to-cyan-50 dark:from-teal-900/20 dark:to-cyan-900/20 rounded-lg p-6 border border-teal-200 dark:border-teal-800">
+            <div className="flex items-center justify-between mb-4">
+              <h4 className="text-lg font-medium text-gray-900 dark:text-white">
+                Protocol Upgrades
+              </h4>
+              <Zap className="h-5 w-5 text-teal-500" />
+            </div>
+            <div className="text-3xl font-bold text-teal-600 dark:text-teal-400 mb-2">
+              {morphoData.upgradeds.length}
+            </div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">
+              Implementation updates tracked
+            </div>
+          </div>
+
+          <div className="bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 rounded-lg p-6 border border-indigo-200 dark:border-indigo-800">
+            <div className="flex items-center justify-between mb-4">
+              <h4 className="text-lg font-medium text-gray-900 dark:text-white">
+                Latest Upgrade
+              </h4>
+              <Clock className="h-5 w-5 text-indigo-500" />
+            </div>
+            <div className="text-3xl font-bold text-indigo-600 dark:text-indigo-400 mb-2">
+              {morphoData.upgradeds.length > 0 ? subgraphService.getTimeAgo(morphoData.upgradeds[0].blockTimestamp) : 'N/A'}
+            </div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">
+              Most recent implementation
+            </div>
+          </div>
+        </div>
+
+        {/* Recent Upgrades */}
+        {morphoData.upgradeds.length > 0 && (
+          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+            <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+              <h4 className="text-lg font-medium text-gray-900 dark:text-white">
+                Recent Protocol Upgrades
+              </h4>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                Live data from Morpho's upgrade events
+              </p>
+            </div>
+            
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                <thead className="bg-gray-50 dark:bg-gray-900">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      Implementation
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      Block
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      Time
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      Event ID
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                  {morphoData.upgradeds.slice(0, 5).map((upgrade, index) => (
+                    <tr key={upgrade.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm font-mono text-gray-900 dark:text-white">
+                          {subgraphService.formatAddress(upgrade.implementation)}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-500 dark:text-gray-400">
+                          #{upgrade.blockNumber}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-500 dark:text-gray-400">
+                          {subgraphService.getTimeAgo(upgrade.blockTimestamp)}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="flex items-center">
+                          <Hash className="h-4 w-4 text-gray-400 mr-2" />
+                          <div className="text-sm text-gray-500 dark:text-gray-400 font-mono">
+                            {upgrade.id.slice(0, 10)}...{upgrade.id.slice(-8)}
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {/* Footer */}
+        <div className="text-center text-sm text-gray-500 dark:text-gray-400">
+          <p>
+            Data sourced from{' '}
+            <a 
+              href="https://api.studio.thegraph.com/query/113928/defiscan-morpho/version/latest"
               target="_blank"
               rel="noopener noreferrer"
               className="text-blue-600 dark:text-blue-400 hover:underline"

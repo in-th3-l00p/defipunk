@@ -43,6 +43,11 @@ export interface AaveSubgraphData {
   backUnbackeds: BackUnbacked[];
 }
 
+// Morpho specific interfaces
+export interface MorphoSubgraphData {
+  upgradeds: Upgraded[];
+}
+
 class SubgraphService {
   private configs: Record<string, SubgraphConfig> = {
     'liquity-v1': {
@@ -51,6 +56,10 @@ class SubgraphService {
     },
     'aave-v3': {
       url: 'https://api.studio.thegraph.com/query/113928/defiscan-aave-v-3/version/latest',
+      apiKey: '8fdc02506b8136ade45aa36eba213392'
+    },
+    'morpho-blue': {
+      url: 'https://api.studio.thegraph.com/query/113928/defiscan-morpho/version/latest',
       apiKey: '8fdc02506b8136ade45aa36eba213392'
     }
   };
@@ -128,6 +137,21 @@ class SubgraphService {
     `;
 
     return this.query<AaveSubgraphData>('aave-v3', query);
+  }
+
+  async getMorphoData(): Promise<MorphoSubgraphData> {
+    const query = `
+      {
+        upgradeds(first: 10, orderBy: blockTimestamp, orderDirection: desc) {
+          id
+          implementation
+          blockNumber
+          blockTimestamp
+        }
+      }
+    `;
+
+    return this.query<MorphoSubgraphData>('morpho-blue', query);
   }
 
   // Helper function to format ETH values
