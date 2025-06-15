@@ -23,10 +23,34 @@ export interface LiquitySubgraphData {
   activePoolETHBalanceUpdateds: ActivePoolETHBalanceUpdated[];
 }
 
+// Aave v3 specific interfaces
+export interface Upgraded {
+  id: string;
+  implementation: string;
+  blockNumber: string;
+  blockTimestamp: string;
+}
+
+export interface BackUnbacked {
+  id: string;
+  reserve: string;
+  backer: string;
+  amount: string;
+}
+
+export interface AaveSubgraphData {
+  upgradeds: Upgraded[];
+  backUnbackeds: BackUnbacked[];
+}
+
 class SubgraphService {
   private configs: Record<string, SubgraphConfig> = {
     'liquity-v1': {
       url: 'https://api.studio.thegraph.com/query/113928/defiscan-liquity/version/latest',
+      apiKey: '8fdc02506b8136ade45aa36eba213392'
+    },
+    'aave-v3': {
+      url: 'https://api.studio.thegraph.com/query/113928/defiscan-aave-v-3/version/latest',
       apiKey: '8fdc02506b8136ade45aa36eba213392'
     }
   };
@@ -85,6 +109,27 @@ class SubgraphService {
     return this.query<LiquitySubgraphData>('liquity-v1', query);
   }
 
+  async getAaveData(): Promise<AaveSubgraphData> {
+    const query = `
+      {
+        upgradeds(first: 10, orderBy: blockTimestamp, orderDirection: desc) {
+          id
+          implementation
+          blockNumber
+          blockTimestamp
+        }
+        backUnbackeds(first: 10, orderBy: blockTimestamp, orderDirection: desc) {
+          id
+          reserve
+          backer
+          amount
+        }
+      }
+    `;
+
+    return this.query<AaveSubgraphData>('aave-v3', query);
+  }
+
   // Helper function to format ETH values
   formatETH(weiValue: string): string {
     const eth = parseFloat(weiValue) / 1e18;
@@ -94,6 +139,22 @@ class SubgraphService {
       return `${(eth / 1000).toFixed(2)}K ETH`;
     }
     return `${eth.toFixed(4)} ETH`;
+  }
+
+  // Helper function to format token amounts (for Aave)
+  formatTokenAmount(amount: string, decimals: number = 18): string {
+    const value = parseFloat(amount) / Math.pow(10, decimals);
+    if (value >= 1000000) {
+      return `${(value / 1000000).toFixed(2)}M`;
+    } else if (value >= 1000) {
+      return `${(value / 1000).toFixed(2)}K`;
+    }
+    return `${value.toFixed(4)}`;
+  }
+
+  // Helper function to format addresses
+  formatAddress(address: string): string {
+    return `${address.slice(0, 6)}...${address.slice(-4)}`;
   }
 
   // Helper function to format timestamps
