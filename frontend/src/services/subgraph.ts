@@ -48,6 +48,26 @@ export interface MorphoSubgraphData {
   upgradeds: Upgraded[];
 }
 
+// Compound v3 specific interfaces
+export interface AdminChanged {
+  id: string;
+  previousAdmin: string;
+  newAdmin: string;
+  blockNumber: string;
+}
+
+export interface BeaconUpgraded {
+  id: string;
+  beacon: string;
+  blockNumber: string;
+  blockTimestamp: string;
+}
+
+export interface CompoundSubgraphData {
+  adminChangeds: AdminChanged[];
+  beaconUpgradeds: BeaconUpgraded[];
+}
+
 class SubgraphService {
   private configs: Record<string, SubgraphConfig> = {
     'liquity-v1': {
@@ -61,6 +81,10 @@ class SubgraphService {
     'morpho-blue': {
       url: 'https://api.studio.thegraph.com/query/113928/defiscan-morpho/version/latest',
       apiKey: '8fdc02506b8136ade45aa36eba213392'
+    },
+    'compound-v3': {
+      url: 'https://api.studio.thegraph.com/query/113929/defiscan-compound-v-3/version/latest',
+      apiKey: '07e6c18506441560cfded94af605566e'
     }
   };
 
@@ -152,6 +176,27 @@ class SubgraphService {
     `;
 
     return this.query<MorphoSubgraphData>('morpho-blue', query);
+  }
+
+  async getCompoundData(): Promise<CompoundSubgraphData> {
+    const query = `
+      {
+        adminChangeds(first: 10, orderBy: blockNumber, orderDirection: desc) {
+          id
+          previousAdmin
+          newAdmin
+          blockNumber
+        }
+        beaconUpgradeds(first: 10, orderBy: blockTimestamp, orderDirection: desc) {
+          id
+          beacon
+          blockNumber
+          blockTimestamp
+        }
+      }
+    `;
+
+    return this.query<CompoundSubgraphData>('compound-v3', query);
   }
 
   // Helper function to format ETH values

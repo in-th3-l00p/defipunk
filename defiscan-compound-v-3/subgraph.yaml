@@ -30,3 +30,26 @@ dataSources:
         - event: Upgraded(indexed address)
           handler: handleUpgraded
       file: ./src/transparent-upgradeable-proxy.ts
+  - kind: ethereum
+    name: CometRewards
+    network: mainnet
+    source:
+      address: "0x1B0e765F6224C21223AeA2af16c1C46E38885a40"
+      abi: CometRewards
+      startBlock: 15331591
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.9
+      language: wasm/assemblyscript
+      entities:
+        - GovernorTransferred
+        - RewardClaimed
+      abis:
+        - name: CometRewards
+          file: ./abis/CometRewards.json
+      eventHandlers:
+        - event: GovernorTransferred(indexed address,indexed address)
+          handler: handleGovernorTransferred
+        - event: RewardClaimed(indexed address,indexed address,indexed address,uint256)
+          handler: handleRewardClaimed
+      file: ./src/comet-rewards.ts

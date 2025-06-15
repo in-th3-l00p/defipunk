@@ -1,8 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Activity, TrendingUp, Clock, Hash, Shield, Zap, Layers } from 'lucide-react'
-import { subgraphService, LiquitySubgraphData, AaveSubgraphData, MorphoSubgraphData, ActivePoolETHBalanceUpdated } from '../services/subgraph'
+import { Activity, TrendingUp, Clock, Hash, Shield, Zap, Layers, Settings } from 'lucide-react'
+import { subgraphService, LiquitySubgraphData, AaveSubgraphData, MorphoSubgraphData, CompoundSubgraphData, ActivePoolETHBalanceUpdated } from '../services/subgraph'
 
 interface SubgraphDataProps {
   protocolSlug: string
@@ -12,12 +12,13 @@ export default function SubgraphData({ protocolSlug }: SubgraphDataProps) {
   const [liquityData, setLiquityData] = useState<LiquitySubgraphData | null>(null)
   const [aaveData, setAaveData] = useState<AaveSubgraphData | null>(null)
   const [morphoData, setMorphoData] = useState<MorphoSubgraphData | null>(null)
+  const [compoundData, setCompoundData] = useState<CompoundSubgraphData | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     async function fetchSubgraphData() {
-      if (!['liquity-v1', 'aave-v3', 'morpho-blue'].includes(protocolSlug)) {
+      if (!['liquity-v1', 'aave-v3', 'morpho-blue', 'compound-v3'].includes(protocolSlug)) {
         setLoading(false)
         return
       }
@@ -33,6 +34,9 @@ export default function SubgraphData({ protocolSlug }: SubgraphDataProps) {
         } else if (protocolSlug === 'morpho-blue') {
           const data = await subgraphService.getMorphoData()
           setMorphoData(data)
+        } else if (protocolSlug === 'compound-v3') {
+          const data = await subgraphService.getCompoundData()
+          setCompoundData(data)
         }
       } catch (err) {
         setError('Failed to fetch on-chain data')
@@ -45,7 +49,7 @@ export default function SubgraphData({ protocolSlug }: SubgraphDataProps) {
     fetchSubgraphData()
   }, [protocolSlug])
 
-  if (!['liquity-v1', 'aave-v3', 'morpho-blue'].includes(protocolSlug)) {
+  if (!['liquity-v1', 'aave-v3', 'morpho-blue', 'compound-v3'].includes(protocolSlug)) {
     return (
       <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-6">
         <div className="text-center">
@@ -79,7 +83,7 @@ export default function SubgraphData({ protocolSlug }: SubgraphDataProps) {
     )
   }
 
-  if (error || (!liquityData && !aaveData && !morphoData)) {
+  if (error || (!liquityData && !aaveData && !morphoData && !compoundData)) {
     return (
       <div className="bg-red-50 dark:bg-red-900/20 rounded-lg p-6">
         <div className="text-center">
@@ -490,6 +494,204 @@ export default function SubgraphData({ protocolSlug }: SubgraphDataProps) {
             Data sourced from{' '}
             <a 
               href="https://api.studio.thegraph.com/query/113928/defiscan-morpho/version/latest"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 dark:text-blue-400 hover:underline"
+            >
+              The Graph's Subgraph Studio
+            </a>
+            {' '}• Real-time blockchain indexing for true decentralization
+          </p>
+        </div>
+      </div>
+    )
+  }
+
+  // Render Compound v3 data
+  if (protocolSlug === 'compound-v3' && compoundData) {
+    return (
+      <div className="space-y-6">
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center">
+            <Settings className="h-6 w-6 text-teal-600 dark:text-teal-400 mr-3" />
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
+              Live Protocol Analytics
+            </h3>
+          </div>
+          <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
+            <div className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></div>
+            Powered by The Graph
+          </div>
+        </div>
+
+        {/* Key Metrics */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="bg-gradient-to-br from-violet-50 to-purple-50 dark:from-violet-900/20 dark:to-purple-900/20 rounded-lg p-6 border border-violet-200 dark:border-violet-800">
+            <div className="flex items-center justify-between mb-4">
+              <h4 className="text-lg font-medium text-gray-900 dark:text-white">
+                Admin Changes
+              </h4>
+              <Settings className="h-5 w-5 text-violet-500" />
+            </div>
+            <div className="text-3xl font-bold text-violet-600 dark:text-violet-400 mb-2">
+              {compoundData.adminChangeds.length}
+            </div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">
+              Administrative updates tracked
+            </div>
+          </div>
+
+          <div className="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 rounded-lg p-6 border border-amber-200 dark:border-amber-800">
+            <div className="flex items-center justify-between mb-4">
+              <h4 className="text-lg font-medium text-gray-900 dark:text-white">
+                Beacon Upgrades
+              </h4>
+              <Zap className="h-5 w-5 text-amber-500" />
+            </div>
+            <div className="text-3xl font-bold text-amber-600 dark:text-amber-400 mb-2">
+              {compoundData.beaconUpgradeds.length}
+            </div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">
+              Beacon implementations tracked
+            </div>
+          </div>
+        </div>
+
+        {/* Recent Admin Changes */}
+        {compoundData.adminChangeds.length > 0 && (
+          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+            <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+              <h4 className="text-lg font-medium text-gray-900 dark:text-white">
+                Recent Admin Changes
+              </h4>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                Live data from Compound v3's admin change events
+              </p>
+            </div>
+            
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                <thead className="bg-gray-50 dark:bg-gray-900">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      Previous Admin
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      New Admin
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      Block
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      Event ID
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                  {compoundData.adminChangeds.slice(0, 5).map((adminChange, index) => (
+                    <tr key={adminChange.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm font-mono text-gray-900 dark:text-white">
+                          {subgraphService.formatAddress(adminChange.previousAdmin)}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm font-mono text-gray-900 dark:text-white">
+                          {subgraphService.formatAddress(adminChange.newAdmin)}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-500 dark:text-gray-400">
+                          #{adminChange.blockNumber}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="flex items-center">
+                          <Hash className="h-4 w-4 text-gray-400 mr-2" />
+                          <div className="text-sm text-gray-500 dark:text-gray-400 font-mono">
+                            {adminChange.id.slice(0, 10)}...{adminChange.id.slice(-8)}
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {/* Recent Beacon Upgrades */}
+        {compoundData.beaconUpgradeds.length > 0 && (
+          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+            <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+              <h4 className="text-lg font-medium text-gray-900 dark:text-white">
+                Recent Beacon Upgrades
+              </h4>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                Live data from Compound v3's beacon upgrade events
+              </p>
+            </div>
+            
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                <thead className="bg-gray-50 dark:bg-gray-900">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      Beacon
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      Block
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      Time
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      Event ID
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                  {compoundData.beaconUpgradeds.slice(0, 5).map((beaconUpgrade, index) => (
+                    <tr key={beaconUpgrade.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm font-mono text-gray-900 dark:text-white">
+                          {subgraphService.formatAddress(beaconUpgrade.beacon)}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-500 dark:text-gray-400">
+                          #{beaconUpgrade.blockNumber}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-500 dark:text-gray-400">
+                          {subgraphService.getTimeAgo(beaconUpgrade.blockTimestamp)}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="flex items-center">
+                          <Hash className="h-4 w-4 text-gray-400 mr-2" />
+                          <div className="text-sm text-gray-500 dark:text-gray-400 font-mono">
+                            {beaconUpgrade.id.slice(0, 10)}...{beaconUpgrade.id.slice(-8)}
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {/* Footer */}
+        <div className="text-center text-sm text-gray-500 dark:text-gray-400">
+          <p>
+            Data sourced from{' '}
+            <a 
+              href="https://api.studio.thegraph.com/query/113928/defiscan-compound-v3/version/latest"
               target="_blank"
               rel="noopener noreferrer"
               className="text-blue-600 dark:text-blue-400 hover:underline"
