@@ -89,12 +89,17 @@ export default function Home() {
           <p className="mt-4 text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
             The Cypherpunk Scorecard for DeFi. We quantify how each protocol aligns with key cypherpunk values—privacy integrations, decentralization, FLOSS licensing, self-custody, and immutable execution.
           </p>
+          <p className="mt-2 text-sm text-gray-500 dark:text-gray-400 max-w-2xl mx-auto">
+            Featuring curated protocols from DeFiScan.info analysis: Liquity, Ajna, Morpho, Aave v3, Compound v3, Dyad, and Sky.
+          </p>
           <div className="mt-6 flex justify-center gap-4 text-sm text-gray-500 dark:text-gray-400">
-            <span>📊 {protocols.length} protocols analyzed</span>
+            <span>📊 {protocols.length} curated protocols</span>
             <span>•</span>
             <span>🔄 Updated in real-time</span>
             <span>•</span>
             <span>⚡ Powered by DeFiLlama</span>
+            <span>•</span>
+            <span>🛡️ Analyzed by DeFiScan</span>
           </div>
         </div>
 

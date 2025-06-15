@@ -16,6 +16,17 @@ export interface DeFiPunkProtocol {
   description: string;
 }
 
+// Global filter list - only these protocols will be shown
+export const ALLOWED_PROTOCOLS = [
+  'liquity-v2', 
+  'morpho-aavev3',
+  'aave-v3',
+  'compound-v3',
+  'dyad',
+  'sky-lending',
+  'makerdao' // Include makerdao for compatibility
+];
+
 // DeFiPunk scoring criteria weights
 const SCORING_WEIGHTS = {
   decentralization: 0.25,
@@ -35,15 +46,55 @@ const PROTOCOL_CHARACTERISTICS: Record<string, {
   immutability: number;
   permissionless: number;
 }> = {
-  'uniswap': {
-    decentralization: 90,
+  'liquity-v1': {
+    decentralization: 95,
+    openSource: 100,
+    selfCustody: 100,
+    privacy: 40,
+    immutability: 100,
+    permissionless: 100,
+  },
+  'liquity-v2': {
+    decentralization: 95,
+    openSource: 100,
+    selfCustody: 100,
+    privacy: 40,
+    immutability: 100,
+    permissionless: 100,
+  },
+  'ajna-v2': {
+    decentralization: 85,
+    openSource: 100,
+    selfCustody: 100,
+    privacy: 35,
+    immutability: 90,
+    permissionless: 95,
+  },
+  'morpho-blue': {
+    decentralization: 80,
     openSource: 100,
     selfCustody: 100,
     privacy: 30,
-    immutability: 95,
-    permissionless: 100,
+    immutability: 85,
+    permissionless: 90,
   },
-  'aave': {
+  'morpho-aave': {
+    decentralization: 80,
+    openSource: 100,
+    selfCustody: 100,
+    privacy: 30,
+    immutability: 85,
+    permissionless: 90,
+  },
+  'morpho-aavev3': {
+    decentralization: 80,
+    openSource: 100,
+    selfCustody: 100,
+    privacy: 30,
+    immutability: 85,
+    permissionless: 90,
+  },
+  'aave-v3': {
     decentralization: 85,
     openSource: 100,
     selfCustody: 100,
@@ -51,7 +102,7 @@ const PROTOCOL_CHARACTERISTICS: Record<string, {
     immutability: 90,
     permissionless: 95,
   },
-  'compound': {
+  'compound-v3': {
     decentralization: 80,
     openSource: 100,
     selfCustody: 100,
@@ -59,13 +110,21 @@ const PROTOCOL_CHARACTERISTICS: Record<string, {
     immutability: 85,
     permissionless: 90,
   },
-  'curve': {
-    decentralization: 85,
-    openSource: 100,
+  'dyad': {
+    decentralization: 75,
+    openSource: 95,
     selfCustody: 100,
     privacy: 30,
-    immutability: 90,
-    permissionless: 95,
+    immutability: 80,
+    permissionless: 85,
+  },
+  'sky-lending': {
+    decentralization: 75,
+    openSource: 100,
+    selfCustody: 100,
+    privacy: 25,
+    immutability: 80,
+    permissionless: 85,
   },
   'makerdao': {
     decentralization: 75,
@@ -74,14 +133,6 @@ const PROTOCOL_CHARACTERISTICS: Record<string, {
     privacy: 25,
     immutability: 80,
     permissionless: 85,
-  },
-  'tornado-cash': {
-    decentralization: 95,
-    openSource: 100,
-    selfCustody: 100,
-    privacy: 100,
-    immutability: 100,
-    permissionless: 100,
   },
   'default': {
     decentralization: 50,
@@ -134,12 +185,16 @@ export function transformProtocolToDefipunk(protocol: Protocol): DeFiPunkProtoco
 
 export function filterAndSortProtocols(protocols: Protocol[]): DeFiPunkProtocol[] {
   return protocols
-    .filter(protocol => 
-      // Filter out CEX and other non-DeFi protocols
-      !['CEX', 'Chain'].includes(protocol.category) &&
-      protocol.tvl > 1000000 // Only protocols with > $1M TVL
-    )
+    .filter(protocol => {
+      // Only include protocols that are in our allowed list
+      const isAllowed = ALLOWED_PROTOCOLS.includes(protocol.slug.toLowerCase());
+      
+      // Additional filters
+      const isValidCategory = !['CEX', 'Chain'].includes(protocol.category);
+      const hasMinimumTvl = protocol.tvl > 0; // Allow any TVL for our curated list
+      
+      return isAllowed && isValidCategory && hasMinimumTvl;
+    })
     .map(transformProtocolToDefipunk)
-    .sort((a, b) => b.alignmentScore - a.alignmentScore) // Sort by alignment score descending
-    .slice(0, 50); // Top 50 protocols
+    .sort((a, b) => b.alignmentScore - a.alignmentScore); // Sort by alignment score descending
 } 
