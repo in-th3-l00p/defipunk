@@ -72,6 +72,26 @@ const SCORING_WEIGHTS = {
 // - Contracts: 17 core contracts all with renounced permissions
 // - Oracle Dependencies: Chainlink (primary) + Tellor (fallback) + last good price mechanism
 //
+// AAVE V3 ANALYSIS (Based on DeFiScan Stage 0 Assessment):
+// - Website: https://aave.com
+// - Twitter: https://x.com/aave
+// - GitHub: https://github.com/aave-dao/aave-v3-origin
+// - Chain: Ethereum Mainnet
+// - Stage: Stage 0 (High centralization risk across upgradeability, autonomy, exit window)
+// - Key Features:
+//   * Lending protocol for ERC20 assets with collateralized borrowing
+//   * Native stablecoin GHO with 1:1 USDC/USDT backing
+//   * Multi-chain governance via a.DI cross-chain messaging
+//   * Fully upgradeable contracts through Aave Governance
+//   * Emergency Admin multisig can pause markets and disable liquidation grace period
+// - Major Risks:
+//   * High Upgradeability Risk: All core contracts fully upgradeable, Emergency Admin not security council
+//   * High Autonomy Risk: Chainlink oracle dependency with no fallback mechanisms
+//   * High Exit Window Risk: Emergency Admin powers not protected by exit windows
+//   * Potential for controlled liquidations during market downturns via Emergency Admin
+// - Governance: AAVE token holders vote, 7-day exit window for Level 2, 1-day for Level 1
+// - Oracle: Chainlink feeds with limited validation, no fallback oracles instantiated
+//
 const PROTOCOL_CHARACTERISTICS: Record<string, {
   decentralization: number;
   openSource: number;
@@ -113,12 +133,12 @@ const PROTOCOL_CHARACTERISTICS: Record<string, {
     permissionless: 90,
   },
   'aave-v3': {
-    decentralization: 85,
-    openSource: 100,
-    selfCustody: 100,
-    privacy: 25,
-    immutability: 90,
-    permissionless: 95,
+    decentralization: 40, // Stage 0 - High centralization risk across upgradeability, autonomy, exit window
+    openSource: 100, // Fully open source on GitHub: https://github.com/aave-dao/aave-v3-origin
+    selfCustody: 100, // Non-custodial lending protocol, users control their assets
+    privacy: 25, // Basic privacy (no KYC), but transactions are on-chain and traceable
+    immutability: 20, // High upgradeability risk - fully upgradeable contracts, Emergency Admin powers
+    permissionless: 85, // Generally permissionless but Emergency Admin can pause markets
   },
   'compound-v3': {
     decentralization: 80,
