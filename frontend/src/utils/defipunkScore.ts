@@ -156,6 +156,28 @@ const SCORING_WEIGHTS = {
 // - Dependencies: Circle USDC (1:1 minting), Chronicle oracles (medium centralization risk)
 // - Accessibility: Closed-source frontend, but multiple third-party interfaces available
 //
+// DYAD ANALYSIS (Based on DeFiScan Stage 0 Assessment):
+// - Website: https://dyadstable.xyz
+// - Twitter: https://x.com/0xDYAD
+// - GitHub: https://github.com/DyadStablecoin
+// - Chain: Ethereum Mainnet
+// - Stage: Stage 0 (High centralization risk across upgradeability, autonomy, exit window)
+// - Key Features:
+//   * Interest-free stablecoin minting against collateral (ETH, stETH, TBTC, sUSDe)
+//   * 150% minimum collateralization ratio with liquidation mechanism
+//   * Excess collateral value tokenized for additional backing utility
+//   * Single interface with open source frontend code
+// - Major Risks:
+//   * Extreme Upgradeability Risk: VaultManagerV4 upgradeable, enables arbitrary DYAD minting
+//   * High Autonomy Risk: Immutable Chainlink oracles with no fallback or sanity checks
+//   * High Exit Window Risk: No timelock protection, immediate upgrades possible
+//   * Team multisig (2/3) can remove vaults and freeze collateral permanently
+//   * Oracle failure freezes specific collateral types with no recovery mechanism
+// - Governance: Team multisig 0xDeD796De6a14E255487191963dEe436c45995813 (2/3, non-public signers)
+// - Oracle: Immutable Chainlink feeds for WETH, stETH, TBTC, sUSDe (no replacement possible)
+// - Critical Flaw: If Chainlink feed discontinued, corresponding collateral permanently lost
+// - Accessibility: Single interface but open source frontend allows self-hosting
+//
 const PROTOCOL_CHARACTERISTICS: Record<string, {
   decentralization: number;
   openSource: number;
@@ -213,12 +235,12 @@ const PROTOCOL_CHARACTERISTICS: Record<string, {
     permissionless: 75, // Generally permissionless but PauseGuardian can freeze markets
   },
   'dyad': {
-    decentralization: 75,
-    openSource: 95,
-    selfCustody: 100,
-    privacy: 30,
-    immutability: 80,
-    permissionless: 85,
+    decentralization: 25, // Stage 0 - High centralization risk across upgradeability, autonomy, exit window
+    openSource: 95, // Fully open source on GitHub: https://github.com/DyadStablecoin
+    selfCustody: 90, // Generally non-custodial but multisig can freeze collateral by removing vaults
+    privacy: 30, // Basic privacy (no KYC), but transactions are on-chain and traceable
+    immutability: 5, // Extreme upgradeability risk - VaultManager upgradeable, arbitrary DYAD minting possible
+    permissionless: 60, // Generally permissionless but multisig can remove vaults and freeze collateral
   },
   'sky-lending': {
     decentralization: 30, // Stage 0 - High centralization risk across upgradeability, autonomy, exit window
