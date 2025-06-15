@@ -92,6 +92,27 @@ const SCORING_WEIGHTS = {
 // - Governance: AAVE token holders vote, 7-day exit window for Level 2, 1-day for Level 1
 // - Oracle: Chainlink feeds with limited validation, no fallback oracles instantiated
 //
+// MORPHO BLUE ANALYSIS (Based on DeFiScan Stage 1 Assessment):
+// - Website: https://morpho.org/
+// - Twitter: https://x.com/MorphoLabs
+// - GitHub: https://github.com/morpho-org
+// - Chain: Ethereum Mainnet
+// - Stage: Stage 1 (Medium centralization risk in upgradeability, autonomy, exit window)
+// - Key Features:
+//   * Permissionless lending market creation with isolated markets
+//   * Each market: 1 collateral, 1 loan asset, LLTV, IRM, oracle
+//   * Morpho Vaults for managed lending strategies by third-party curators
+//   * Core protocol is non-upgradeable and immutable
+//   * Minimal governance scope without direct protocol control
+// - Risks:
+//   * Medium Upgradeability Risk: MORPHO token upgradeable, can impact rewards
+//   * Medium Autonomy Risk: 35%+ markets use Chainlink oracles (centralized dependency)
+//   * Medium Exit Window Risk: MORPHO token permissions not protected by governance
+//   * Chainlink dependency affects 30%+ of TVL, could freeze funds on oracle failure
+// - Governance: morpho.eth multisig controls fee switch, LTV tiers, IRMs for new markets only
+// - Oracle: Permissionless choice by market creators, but heavy Chainlink dependency
+// - Accessibility: Multiple interfaces (app.morpho.org, fallback, self-hosted, third-party)
+//
 const PROTOCOL_CHARACTERISTICS: Record<string, {
   decentralization: number;
   openSource: number;
@@ -109,12 +130,12 @@ const PROTOCOL_CHARACTERISTICS: Record<string, {
     permissionless: 100, // Fully permissionless access, multiple independent frontends available
   },
   'morpho-blue': {
-    decentralization: 80,
-    openSource: 100,
-    selfCustody: 100,
-    privacy: 30,
-    immutability: 85,
-    permissionless: 90,
+    decentralization: 70, // Stage 1 - Medium centralization risk in upgradeability, autonomy, exit window
+    openSource: 100, // Fully open source on GitHub: https://github.com/morpho-org
+    selfCustody: 100, // Non-custodial lending protocol, users control their assets
+    privacy: 30, // Basic privacy (no KYC), but transactions are on-chain and traceable
+    immutability: 75, // Medium upgradeability risk - MORPHO token upgradeable, core protocol immutable
+    permissionless: 95, // Permissionless market creation, minimal governance scope
   },
   'morpho-aave': {
     decentralization: 80,
