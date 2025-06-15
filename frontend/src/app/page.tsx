@@ -54,7 +54,7 @@ export default function Home() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
-        <div className="text-center">
+        <div className="text-center flex flex-col items-center gap-4">
           <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900 dark:border-white"></div>
           <p className="mt-4 text-lg text-gray-600 dark:text-gray-300">Loading DeFiPunk protocols...</p>
         </div>
